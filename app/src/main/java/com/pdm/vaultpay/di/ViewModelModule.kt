@@ -1,5 +1,6 @@
 package com.pdm.vaultpay.di
 
+import com.pdm.vaultpay.ui.email_verification.EmailVerificationViewModel
 import com.pdm.vaultpay.ui.forgot_password.ForgotPasswordViewModel
 import com.pdm.vaultpay.ui.login.LoginViewModel
 import com.pdm.vaultpay.ui.mfa.MfaViewModel
@@ -14,5 +15,6 @@ val viewModelModule = module {
     viewModel { SignupViewModel(get()) }
     viewModel { MfaViewModel(get()) }
     viewModel { ForgotPasswordViewModel(get()) }
+    viewModel { EmailVerificationViewModel(get()) }
     viewModel { ProfileViewModel(get(), get()) }
 }

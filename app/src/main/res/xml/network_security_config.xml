@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
+    <!-- Development configuration - Certificate pinning disabled -->
     <domain-config>
         <domain includeSubdomains="true">bank-backend-production-8bb8.up.railway.app</domain>
-        <pin-set expiration="2026-01-01">
-            <!-- Add your actual certificate pins here -->
-            <!-- You need to obtain these from your backend server -->
-            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin>
-            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin>
-        </pin-set>
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
     </domain-config>
     
     <!-- Development configuration for localhost -->
@@ -19,4 +17,24 @@
             <certificates src="system"/>
         </trust-anchors>
     </domain-config>
+    
+    <!-- PRODUCTION ONLY: Uncomment and configure with real certificate pins
+    <domain-config>
+        <domain includeSubdomains="true">bank-backend-production-8bb8.up.railway.app</domain>
+        <pin-set expiration="2026-01-01">
+            <pin digest="SHA-256">mn00u+nhx7i7NC+MWVnWEWcUJ1ewI7V/6DXi79goQs=</pin>
+            <pin digest="SHA-256">BACKUP_CERTIFICATE_PIN_HERE</pin>
+        </pin-set>
+    </domain-config>
+
+    depth=2 C=US, O=Internet Security Research Group, CN=ISRG Root X1
+    verify return:1
+    depth=1 C=US, O=Let's Encrypt, CN=R11
+    verify return:1
+    depth=0 CN=*.up.railway.app
+    verify return:1
+    writing RSA key
+    dmn00u+nhx7i7NC+MWVnWEWcUJ1ewI7V/6DXi79goQs=
+
+    -->
 </network-security-config>

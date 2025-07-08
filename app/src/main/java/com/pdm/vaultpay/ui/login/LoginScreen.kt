@@ -13,7 +13,8 @@ import org.koin.androidx.compose.koinViewModel
 fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
     onMfaRequired: () -> Unit,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: () -> Unit,
+    onForgotPassword: () -> Unit = {}
 ) {
     val email by viewModel.email
     val password by viewModel.password
@@ -74,9 +75,45 @@ fun LoginScreen(
             }
         }
 
-        errorMessage?.let {
+        Spacer(modifier = Modifier.height(12.dp))
+
+        TextButton(
+            onClick = onForgotPassword,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Forgot Password?")
+        }
+
+        errorMessage?.let { error ->
             Spacer(modifier = Modifier.height(12.dp))
-            Text(it, color = MaterialTheme.colorScheme.error)
+            
+            // Special handling for email verification errors
+            if (error.contains("401") || error.lowercase().contains("verify") || error.lowercase().contains("email")) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "Email Verification Required",
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Please verify your email address before logging in. Check your inbox for a verification link.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    }
+                }
+            } else {
+                Text(error, color = MaterialTheme.colorScheme.error)
+            }
         }
     }
 }

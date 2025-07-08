@@ -26,6 +26,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.pdm.vaultpay.core.SecureTokenManager
 import com.pdm.vaultpay.ui.dashboard.DashboardScreen
+import com.pdm.vaultpay.ui.email_verification.EmailVerificationScreen
+import com.pdm.vaultpay.ui.forgot_password.ForgotPasswordScreen
 import com.pdm.vaultpay.ui.login.LoginScreen
 import com.pdm.vaultpay.ui.mfa.MFAScreen
 import com.pdm.vaultpay.ui.signup.SignupScreen
@@ -78,15 +80,39 @@ fun VaultPayAppEntryPoint() {
             }
 
             composable("signup") {
-                SignupScreen(onSignupSuccess = {
-                    navController.navigate("login")
+                SignupScreen(onSignupSuccess = { email ->
+                    navController.navigate("email_verification/$email")
                 })
+            }
+
+            composable("email_verification/{email}") { backStackEntry ->
+                val email = backStackEntry.arguments?.getString("email")
+                EmailVerificationScreen(
+                    userEmail = email,
+                    onVerificationComplete = { 
+                        navController.navigate("login") {
+                            popUpTo("welcome") { inclusive = false }
+                        }
+                    },
+                    onBackToLogin = { 
+                        navController.navigate("login") {
+                            popUpTo("welcome") { inclusive = false }
+                        }
+                    }
+                )
+            }
+
+            composable("forgot_password") {
+                ForgotPasswordScreen(
+                    onBackToLogin = { navController.popBackStack() }
+                )
             }
 
             composable("login") {
                 LoginScreen(
                     onMfaRequired = { navController.navigate("mfa") },
-                    onLoginSuccess = { navController.navigate("dashboard") }
+                    onLoginSuccess = { navController.navigate("dashboard") },
+                    onForgotPassword = { navController.navigate("forgot_password") }
                 )
             }
 

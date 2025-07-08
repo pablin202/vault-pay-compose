@@ -23,7 +23,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SignupScreen(
     viewModel: SignupViewModel = koinViewModel(),
-    onSignupSuccess: () -> Unit
+    onSignupSuccess: (String) -> Unit
 ) {
     val email by viewModel.email
     val password by viewModel.password
@@ -31,9 +31,11 @@ fun SignupScreen(
     val isLoading by viewModel.isLoading
     val errorMessage by viewModel.errorMessage
     val signupSuccess by viewModel.signupSuccess
+    val emailError by viewModel.emailError
+    val passwordValidationErrors by viewModel.passwordValidationErrors
 
     if (signupSuccess) {
-        onSignupSuccess()
+        onSignupSuccess(email)
     }
 
     Column(
@@ -42,17 +44,23 @@ fun SignupScreen(
     ) {
         TextField(
             value = email,
-            onValueChange = { viewModel.email.value = it },
+            onValueChange = { viewModel.validateEmailRealTime(it) },
             label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = emailError != null,
+            supportingText = emailError?.let { { Text(it) } }
         )
         Spacer(Modifier.height(8.dp))
         TextField(
             value = password,
-            onValueChange = { viewModel.password.value = it },
+            onValueChange = { viewModel.validatePasswordRealTime(it) },
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation(),
+            isError = passwordValidationErrors.isNotEmpty(),
+            supportingText = if (passwordValidationErrors.isNotEmpty()) {
+                { Text(passwordValidationErrors.take(2).joinToString("\n")) }
+            } else null
         )
         Spacer(Modifier.height(8.dp))
         TextField(
