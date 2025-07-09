@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -121,7 +122,7 @@ fun ProfileScreen(
 
                         if (isEditMode) {
                             Spacer(modifier = Modifier.height(16.dp))
-                            Divider()
+                            HorizontalDivider()
                             Spacer(modifier = Modifier.height(16.dp))
 
                             // Edit Fields
